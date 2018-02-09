@@ -47,6 +47,7 @@ store.subscribe(() => {
 
     if (previousHash !== currentHash) {
         store.dispatch(hashUpdated(currentHash))
+        store.dispatch(submitQuery())
     }
 })
 
