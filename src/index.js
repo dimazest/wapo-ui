@@ -6,9 +6,15 @@ import logger from 'redux-logger'
 import {createBrowserHistory, routerReducer, routerMiddleware, startListener} from 'redux-first-routing'
 import thunkMiddleware from 'redux-thunk'
 
-import {hashUpdated} from './actions'
+import elasticsearch from 'elasticsearch'
+
+import {hashUpdated, submitQuery} from './actions'
 import reducers from './reducers'
 import App from './App'
+
+window.client = new elasticsearch.Client({
+    host: 'localhost:9200',
+})
 
 const history = createBrowserHistory()
 
@@ -46,6 +52,7 @@ store.subscribe(() => {
 
 if (currentHash) {
     store.dispatch(hashUpdated(currentHash))
+    store.dispatch(submitQuery())
 }
 
 render(

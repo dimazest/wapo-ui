@@ -1,4 +1,4 @@
-import {CHANGE_QUERY, RENDER_NEW_QUERY, HASH_UPDATED} from '../actions'
+import {CHANGE_QUERY, RENDER_NEW_QUERY, HASH_UPDATED, HITS_RECEIVED} from '../actions'
 
 
 const frontend = (state = {}, action) => {
@@ -33,5 +33,16 @@ const frontend = (state = {}, action) => {
     }
 }
 
-export default {frontend}
+const hits = (state = {}, action) => {
+    switch(action.type) {
+    case HITS_RECEIVED:
+        return {
+            ...state, ...action
+        }
+    default:
+        return state
+    }
+}
+
+export default {frontend, hits}
 

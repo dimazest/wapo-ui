@@ -34,16 +34,35 @@ QueryForm = connect(
     })
 )(QueryForm)
 
-let SearchResults = ({queryText}) => {
-    return (
-        <div className="jumbotron">
-            <h1>{queryText}</h1>
-            <p className="lead">This example is a quick exercise to illustrate how fixed to top navbar works. As you scroll, it will remain fixed to the top of your browser's viewport.</p>
-        </div>
+let SearchResults = ({queryText, hits}) => {
+    if (hits && hits.body && hits.body.hits.total) {
+        return (
+            <div className="card">
+                <div className="card-header">
+                    Total {hits.body.hits.total} hits.
+                </div>
+                <ul className="list-group list-group-flush">
 
-    )
+                    {hits.body.hits.hits.map(hit => (
+                        <li className="list-group-item" key={hit._id}>
+                            <h4 className="card-title">{hit._source.title}</h4>
+                            <p className="lead">{hit._source.captions}</p>
+                        </li>
+                    ))
+                    }
+                </ul>
+            </div>
+        )
+    } else {
+        return null
+    }
 }
-SearchResults = connect(store => ({queryText: store.frontend.queryText.current}))(SearchResults)
+SearchResults = connect(
+    store => ({
+        queryText: store.frontend.queryText.current,
+        hits: store.hits,
+    })
+)(SearchResults)
 
 const App = () => {
     return (
