@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.0.0",
+    "decode-uri-component": "^0.2.0",
     "jquery": "^3.3.1",
     "popper.js": "^1.12.9",
     "query-string": "^5.1.0",
@@ -12,7 +13,6 @@
     "react-redux": "^5.0.6",
     "react-scripts": "1.1.0",
     "redux": "^3.7.2",
-    "redux-batched-actions": "^0.2.1",
     "redux-first-routing": "^0.3.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0"
@@ -21,6 +21,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "homepage": "https://dimazest.github.io/wapo-ui/",
+  "devDependencies": {
+    "gh-pages": "^1.1.0"
   }
 }

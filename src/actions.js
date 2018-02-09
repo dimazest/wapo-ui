@@ -1,5 +1,5 @@
-import {batchActions} from 'redux-batched-actions';
 import {push} from 'redux-first-routing'
+import decodeUriComponent from 'decode-uri-component'
 
 export const RENDER_NEW_QUERY = 'RENDER_NEW_QUERY'
 export const renderNewQuery = () => {
@@ -15,7 +15,7 @@ export const submitQuery = () => {
 
         const query = getState().frontend.queryText.current
 
-        dispatch(push(`/#${query}`))
+        dispatch(push({hash: query}))
     }
 }
 
@@ -33,7 +33,7 @@ export const HASH_UPDATED = 'HASH_UPDATED'
 export const hashUpdated = hash => {
     let query = ''
     if (hash) {
-        query = hash.slice(1)
+        query = decodeUriComponent(hash).slice(1)
     }
 
     return {

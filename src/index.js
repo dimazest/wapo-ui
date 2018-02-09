@@ -5,7 +5,6 @@ import {combineReducers, createStore, applyMiddleware} from 'redux'
 import logger from 'redux-logger'
 import {createBrowserHistory, routerReducer, routerMiddleware, startListener} from 'redux-first-routing'
 import thunkMiddleware from 'redux-thunk'
-import {enableBatching} from 'redux-batched-actions'
 
 import {hashUpdated} from './actions'
 import reducers from './reducers'
@@ -44,6 +43,10 @@ store.subscribe(() => {
         store.dispatch(hashUpdated(currentHash))
     }
 })
+
+if (currentHash) {
+    store.dispatch(hashUpdated(currentHash))
+}
 
 render(
     <Provider store={store}>
