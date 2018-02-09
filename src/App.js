@@ -43,12 +43,23 @@ let SearchResults = ({queryText, hits}) => {
                 </div>
                 <ul className="list-group list-group-flush">
 
-                    {hits.body.hits.hits.map(hit => (
-                        <li className="list-group-item" key={hit._id}>
-                            <h4 className="card-title">{hit._source.title}</h4>
-                            <p className="lead">{hit._source.captions}</p>
+                    {hits.body.hits.hits.map((hit, i) => {
+                        let title = hit.highlight.title
+                        title = title ? title[0].trim() : hit._id
+
+                        return <li className="list-group-item" key={hit._id}>
+                            <h4 className="card-title" dangerouslySetInnerHTML={{
+                                __html: title
+                            }} />
+                            <ul>
+                                {hit.highlight.text.map((text, i) => (
+                                    <li key={i} dangerouslySetInnerHTML={{
+                                        __html: text.trim()
+                                    }} />
+                                ))}
+                            </ul>
                         </li>
-                    ))
+                    })
                     }
                 </ul>
             </div>

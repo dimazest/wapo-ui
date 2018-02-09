@@ -20,7 +20,24 @@ export const submitQuery = () => {
 
         if (query) {
             return window.client.search(
-                {q: query}
+                {
+                    body: {
+                        query: {
+                            simple_query_string: {
+                                query,
+                                default_operator: 'and'
+                            }
+                        },
+                        highlight: {
+                            fields: {
+                                title: {number_of_fragments: 0},
+                                text: {},
+                            },
+                            pre_tags: ['<mark>'],
+                            post_tags: ['</mark>']
+                        }
+                    }
+                }
             ).then(body => {dispatch(hitsReceived(body))})
         }
     }
