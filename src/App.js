@@ -47,8 +47,8 @@ let SearchResults = ({queryText, hits}) => {
                         let title = hit.highlight.title
                         title = title ? title[0].trim() : hit._id
 
-                        return <li className="list-group-item" key={hit._id}>
-                            <h4 className="card-title" dangerouslySetInnerHTML={{
+                        return <li className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}>
+                        <h4 className="card-title" dangerouslySetInnerHTML={{
                                 __html: title
                             }} />
                             <ul>
