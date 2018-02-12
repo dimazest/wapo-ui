@@ -56,7 +56,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter}) => {
                                  <p className="font-weight-light">
                                      <time dateTime={date} className="text-danger">{date.getMonth()}/{date.getDay()}/{date.getFullYear()}</time>. <a href={`#author:"${s.author}"`}>{s.author}</a> <a href={`#kicker:"${s.kicker}"`} className="badge badge-light">{s.kicker}</a>
                                  </p>
-                                 {h.text.length ?
+                                 {(h.text && h.text.length) ?
                                   <ul>
                                       {h.text.map((text, i) => (
                                           <li key={i} dangerouslySetInnerHTML={{
