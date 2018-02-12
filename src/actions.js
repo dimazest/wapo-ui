@@ -16,6 +16,7 @@ export const submitQuery = () => {
 
         const query = getState().frontend.queryText.current
 
+        document.title = getState().frontend.queryText.new
         dispatch(push({hash: query}))
 
         if (query) {

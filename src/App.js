@@ -65,7 +65,6 @@ let SearchResults = ({queryText, hits}) => {
                              </ul>
                              :
                              <p style={{overflow: "auto", maxHeight: "12em", lineHeight: "1.2em"}}>
-                                 {console.log(s.text)}
                                  {s.text}
                              </p>
                             }
@@ -91,7 +90,7 @@ const App = () => {
     return (
         <div>
             <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-                <a className="navbar-brand" href="#">TREC News</a>
+                <span className="navbar-brand">TREC News</span>
                 <QueryForm />
             </nav>
             <main role="main" className="container">
