@@ -26,6 +26,8 @@ const rootReducer = combineReducers({
 const initialState = {
     frontend: {
         queryText: {current: '', new: ''},
+        from: 0,
+        size: 10,
     }
 }
 const store = createStore(

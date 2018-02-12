@@ -19,15 +19,18 @@ export const submitQuery = () => {
         document.title = getState().frontend.queryText.new
         dispatch(push({hash: query}))
 
+        const size = getState().frontend.size
+
         if (query) {
             return window.client.search(
                 {
                     body: {
+                        size,
                         query: {
                             query_string: {
                                 query,
-                                default_operator: 'and'
-                            }
+                                default_operator: 'and',
+                            },
                         },
                         highlight: {
                             fields: {
@@ -70,5 +73,12 @@ export const hitsReceived = body => {
     return {
         type: HITS_RECEIVED,
         body: body,
+    }
+}
+
+export const INCREASE_HITS_COUNT = 'INCREASE_HIT_COUNT'
+export const increaseHitsCount = () => {
+    return {
+        type: INCREASE_HITS_COUNT
     }
 }

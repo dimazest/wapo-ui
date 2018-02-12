@@ -1,4 +1,7 @@
-import {CHANGE_QUERY, RENDER_NEW_QUERY, HASH_UPDATED, HITS_RECEIVED} from '../actions'
+import {
+    CHANGE_QUERY, RENDER_NEW_QUERY, HASH_UPDATED, HITS_RECEIVED,
+    INCREASE_HITS_COUNT
+} from '../actions'
 
 
 const frontend = (state = {}, action) => {
@@ -27,6 +30,11 @@ const frontend = (state = {}, action) => {
                 current: action.query,
                 new: action.query,
             }
+        }
+    case INCREASE_HITS_COUNT:
+        return {
+            ...state,
+            size: state.size + 10
         }
     default:
         return state
