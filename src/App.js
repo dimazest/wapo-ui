@@ -51,17 +51,24 @@ let SearchResults = ({queryText, hits}) => {
 
                         return (
                             <li className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}>
-                                <a href={s.url} className="card-title h4" dangerouslySetInnerHTML={{__html: title}} />
-                                <p className="font-weight-light">
-                                    <time datetime={date} className="text-danger">{date.getMonth()}/{date.getDay()}/{date.getFullYear()}</time>. <a href={`#author:"${s.author}"`}>{s.author}</a> <a href={`#kicker:"${s.kicker}"`} className="badge badge-light">{s.kicker}</a>
-                                </p>
-                                <ul>
-                                    {(h.text || []).map((text, i) => (
-                                        <li key={i} dangerouslySetInnerHTML={{
-                                            __html: text.trim()
-                                        }} />
-                                    ))}
-                                </ul>
+                            <a href={s.url} className="card-title h4" dangerouslySetInnerHTML={{__html: title}} />
+                            <p className="font-weight-light">
+                            <time dateTime={date} className="text-danger">{date.getMonth()}/{date.getDay()}/{date.getFullYear()}</time>. <a href={`#author:"${s.author}"`}>{s.author}</a> <a href={`#kicker:"${s.kicker}"`} className="badge badge-light">{s.kicker}</a>
+                            </p>
+                            {h.text.length ?
+                             <ul>
+                                 {h.text.map((text, i) => (
+                                     <li key={i} dangerouslySetInnerHTML={{
+                                         __html: text.trim()
+                                     }} />
+                                 ))}
+                             </ul>
+                             :
+                             <p style={{overflow: "auto", maxHeight: "12em", lineHeight: "1.2em"}}>
+                                 {console.log(s.text)}
+                                 {s.text}
+                             </p>
+                            }
                             </li>
                         )
                     })

@@ -23,7 +23,7 @@ export const submitQuery = () => {
                 {
                     body: {
                         query: {
-                            simple_query_string: {
+                            query_string: {
                                 query,
                                 default_operator: 'and'
                             }
