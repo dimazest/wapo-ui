@@ -44,21 +44,26 @@ let SearchResults = ({queryText, hits}) => {
                 <ul className="list-group list-group-flush">
 
                     {hits.body.hits.hits.map((hit, i) => {
-                        let title = hit.highlight.title
-                        title = title ? title[0].trim() : hit._id
+                        let h = hit.highlight || {text: []}
+                        const s = hit._source
+                        const title = h.title ? h.title[0].trim() : s.title
+                        const date = new Date(s.date)
 
-                        return <li className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}>
-                        <h4 className="card-title" dangerouslySetInnerHTML={{
-                                __html: title
-                            }} />
-                            <ul>
-                                {hit.highlight.text.map((text, i) => (
-                                    <li key={i} dangerouslySetInnerHTML={{
-                                        __html: text.trim()
-                                    }} />
-                                ))}
-                            </ul>
-                        </li>
+                        return (
+                            <li className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}>
+                                <a href={s.url} className="card-title h4" dangerouslySetInnerHTML={{__html: title}} />
+                                <p className="font-weight-light">
+                                    <time datetime={date} className="text-danger">{date.getMonth()}/{date.getDay()}/{date.getFullYear()}</time>. <a href={`#author:"${s.author}"`}>{s.author}</a> <a href={`#kicker:"${s.kicker}"`} className="badge badge-light">{s.kicker}</a>
+                                </p>
+                                <ul>
+                                    {(h.text || []).map((text, i) => (
+                                        <li key={i} dangerouslySetInnerHTML={{
+                                            __html: text.trim()
+                                        }} />
+                                    ))}
+                                </ul>
+                            </li>
+                        )
                     })
                     }
                 </ul>
