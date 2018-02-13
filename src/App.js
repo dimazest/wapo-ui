@@ -14,17 +14,20 @@ let QueryForm = ({queryText, onChangeQuery, onSubmitQuery}) => {
             <form className="form-inline mt-2 mt-md-0"
                   onSubmit={e => {
                           e.preventDefault()
-
                           onSubmitQuery()
                   }}
             >
-                <input className="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" style={{"width": "600px"}}
-                       value={queryText}
-                       onChange={e => onChangeQuery(e.target.value)}
-                />
-                <button className="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+                <div className="input-group">
+                    <input className="form-control" type="text" placeholder="Search" aria-label="Search" style={{"width": "600px"}}
+                           value={queryText}
+                           onChange={e => onChangeQuery(e.target.value)}
+                    />
+                    <div className="input-group-append">
+                        <button className="btn btn-success" type="submit">Search</button>
+                    </div>
+                </div>
             </form>
-        </div>
+      </div>
     )
 }
 QueryForm = connect(
