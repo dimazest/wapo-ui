@@ -28,6 +28,7 @@ const initialState = {
         queryText: {current: '', new: ''},
         from: 0,
         size: 10,
+        active_hit: 0,
     }
 }
 const store = createStore(

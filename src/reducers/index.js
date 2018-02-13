@@ -1,6 +1,6 @@
 import {
     CHANGE_QUERY, RENDER_NEW_QUERY, HASH_UPDATED, HITS_RECEIVED,
-    INCREASE_HITS_COUNT
+    INCREASE_HITS_COUNT, LINK_CLICK
 } from '../actions'
 
 
@@ -35,6 +35,11 @@ const frontend = (state = {}, action) => {
         return {
             ...state,
             size: state.size + 10
+        }
+    case LINK_CLICK:
+        return {
+            ...state,
+            active_hit: action.i
         }
     default:
         return state

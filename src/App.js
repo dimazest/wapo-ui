@@ -5,7 +5,7 @@ import Waypoint from 'react-waypoint';
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css'
 
-import {submitQuery, changeQuery, increaseHitsCount} from './actions'
+import {submitQuery, changeQuery, increaseHitsCount, linkClick} from './actions'
 
 
 let QueryForm = ({queryText, onChangeQuery, onSubmitQuery}) => {
@@ -38,7 +38,7 @@ QueryForm = connect(
     })
 )(QueryForm)
 
-let SearchResults = ({queryText, hits, onWaypointEnter}) => {
+let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick}) => {
     if (hits && hits.body && hits.body.hits.total) {
         return (
             <div className="card">
@@ -55,7 +55,12 @@ let SearchResults = ({queryText, hits, onWaypointEnter}) => {
 
                          return (
                              <li className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}>
-                                 <a href={s.url} className="card-title h4" dangerouslySetInnerHTML={{__html: title}} />
+                                 <a
+                                     href={s.url}
+                                     className="card-title h4"
+                                     dangerouslySetInnerHTML={{__html: title}}
+                                     onClick={(e) => onLinkClick(e, i)}
+                                 />
                                  <p className="font-weight-light">
                                      <time dateTime={date} className="text-danger">{date.getMonth()}/{date.getDay()}/{date.getFullYear()}</time>. <a href={`#author:"${s.author}"`}>{s.author}</a> <a href={`#kicker:"${s.kicker}"`} className="badge badge-light">{s.kicker}</a>
                                  </p>
@@ -93,22 +98,48 @@ SearchResults = connect(
         onWaypointEnter: () => {
             dispatch(increaseHitsCount())
             dispatch(submitQuery())
-        }
+        },
+        onLinkClick: (e, i) => {e.preventDefault(); dispatch(linkClick(i))}
     })
 )(SearchResults)
 
-const App = () => {
+const WaPo = ({wapo_url}) => {
+    return <iframe
+               className="mw-100 mh-100 w-100 h-100 border-0"
+               src={wapo_url}
+               title="WaPo"
+           />
+}
+
+let App = ({active_hit, hits}) => {
+    hits = hits.body ? hits.body.hits.hits : null
+    const wapo_url = (hits && active_hit >= 0) ? hits[active_hit]._source.url : null
+    
     return (
         <div>
             <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
                 <span className="navbar-brand">TREC News</span>
                 <QueryForm />
             </nav>
-            <main role="main" className="container">
-                <SearchResults />
+            <main role="main" className="containerFluid mx-5">
+                <div className="row">
+                    <div className="col mh-100">
+                        <SearchResults />
+                    </div>
+                    {wapo_url &&
+                     <div className="col p-0 bg-light">
+                         <WaPo wapo_url={wapo_url} />
+                     </div>
+                    }
+                </div>
             </main>
         </div>
     )
 }
-
+App = connect(
+    store => ({
+        active_hit: store.frontend.active_hit,
+        hits: store.hits
+    })
+)(App)
 export default App;

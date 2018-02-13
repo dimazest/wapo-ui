@@ -82,3 +82,11 @@ export const increaseHitsCount = () => {
         type: INCREASE_HITS_COUNT
     }
 }
+
+export const LINK_CLICK = 'LINK_CLICK'
+export const linkClick = i => {
+    return {
+        type: LINK_CLICK,
+        i
+    }
+}
