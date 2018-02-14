@@ -73,7 +73,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick}) => {
                                       ))}
                                   </ul>
                                   :
-                                  <p style={{overflow: "auto", maxHeight: "12em", lineHeight: "1.2em"}}>
+                                  <p style={{overflow: "auto", maxHeight: "12em", lineHeight: "1.2em", overflow: 'scroll'}}>
                                       {s.text}
                                   </p>
                                  }
@@ -121,13 +121,13 @@ let App = ({active_hit, hits}) => {
                 <span className="navbar-brand">TREC News</span>
                 <QueryForm />
             </nav>
-            <main role="main" className="containerFluid mx-5">
+            <main role="main" className="containerFluid mx-5" style={{position: 'relative'}}>
                 <div className="row">
-                    <div className="col mh-100">
+                    <div className="col-6" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
                         <SearchResults />
                     </div>
                     {wapo_url &&
-                     <div className="col p-0 bg-light">
+                     <div className="col-6 offset-6 bg-light" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
                          <WaPo wapo_url={wapo_url} />
                      </div>
                     }
