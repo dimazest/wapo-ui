@@ -38,7 +38,7 @@ QueryForm = connect(
     })
 )(QueryForm)
 
-let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick}) => {
+let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit}) => {
     if (hits && hits.body && hits.body.hits.total) {
         return (
             <div className="card">
@@ -57,7 +57,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick}) => {
                              <li className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}>
                                  <a
                                      href={s.url}
-                                     className="card-title h4"
+                                     className={"card-title h4" + (i !== active_hit ? " text-muted" : "")}
                                      dangerouslySetInnerHTML={{__html: title}}
                                      onClick={(e) => onLinkClick(e, i)}
                                  />
@@ -93,6 +93,7 @@ SearchResults = connect(
     store => ({
         queryText: store.frontend.queryText.current,
         hits: store.hits,
+        active_hit: store.frontend.active_hit
     }),
     dispatch => ({
         onWaypointEnter: () => {
