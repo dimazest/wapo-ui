@@ -3,16 +3,17 @@ import decodeUriComponent from 'decode-uri-component'
 
 
 export const RENDER_NEW_QUERY = 'RENDER_NEW_QUERY'
-export const renderNewQuery = () => {
+export const renderNewQuery = (resetActiveHit=false) => {
     return {
-        type: RENDER_NEW_QUERY
+        type: RENDER_NEW_QUERY,
+        resetActiveHit
     }
 }
 
 
-export const submitQuery = () => {
+export const submitQuery = (resetActiveHit=false) => {
     return (dispatch, getState) => {
-        dispatch(renderNewQuery())
+        dispatch(renderNewQuery(resetActiveHit))
 
         const query = getState().frontend.queryText.current
 
@@ -52,7 +53,7 @@ export const CHANGE_QUERY = 'CHANGE_QUERY'
 export const changeQuery = text => {
     return {
         type: CHANGE_QUERY,
-        text
+        text,
     }
 }
 

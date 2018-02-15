@@ -33,7 +33,7 @@ let QueryForm = ({queryText, onChangeQuery, onSubmitQuery}) => {
 QueryForm = connect(
     state => ({queryText: state.frontend.queryText.new}),
     dispatch => ({
-        onSubmitQuery: () => dispatch(submitQuery()),
+        onSubmitQuery: () => dispatch(submitQuery(true)),
         onChangeQuery: text => dispatch(changeQuery(text))
     })
 )(QueryForm)
@@ -114,7 +114,7 @@ const WaPo = ({wapo_url}) => {
 
 let App = ({active_hit, hits}) => {
     hits = hits.body ? hits.body.hits.hits : null
-    const wapo_url = (hits && active_hit >= 0) ? hits[active_hit]._source.url : null
+    const wapo_url = (hits && active_hit >= 0 && hits[active_hit]) ? hits[active_hit]._source.url : null
     
     return (
         <div>

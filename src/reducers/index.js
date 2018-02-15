@@ -20,7 +20,8 @@ const frontend = (state = {}, action) => {
             queryText: {
                 ...state.queryText,
                 current: state.queryText.new
-            }
+            },
+            active_hit: action.resetActiveHit ? 0 : state.active_hit
         }
     case HASH_UPDATED:
         return {
