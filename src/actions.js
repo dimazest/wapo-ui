@@ -91,3 +91,8 @@ export const linkClick = i => {
         i
     }
 }
+
+
+export const CHANGE_SELECTION = 'CHANGE_SELECTION'
+export const selectNext = (by=1) => ({type: CHANGE_SELECTION, by})
+export const selectPrevious = (by=-1) => ({type: CHANGE_SELECTION, by})

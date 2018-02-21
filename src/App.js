@@ -73,7 +73,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit}
                                       ))}
                                   </ul>
                                   :
-                                  <p style={{overflow: "auto", maxHeight: "12em", lineHeight: "1.2em", overflow: 'scroll'}}>
+                                  <p style={{overflow: "scroll", maxHeight: "12em", lineHeight: "1.2em"}}>
                                       {s.text}
                                   </p>
                                  }
