@@ -14,7 +14,7 @@ import reducers from './reducers'
 import App from './App'
 
 window.client = new elasticsearch.Client({
-    host: 'http://localhost:9200',
+    host: 'localhost:9200',
 })
 
 const history = createBrowserHistory()
