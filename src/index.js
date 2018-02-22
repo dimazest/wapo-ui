@@ -65,6 +65,22 @@ bindShortcuts(
     [['p', 'k', 'up'], selectPrevious],
 )(store.dispatch)
 
+
+let currentActiveHit
+function scrollToActiveHit() {
+    const previous = currentActiveHit
+    const current = store.getState().frontend.active_hit
+
+    if (previous !== current) {
+        const element = document.getElementById(`hit-${current}`)
+        if (element) {
+            element.scrollIntoView(true)
+            currentActiveHit = current
+        }
+    }
+}
+store.subscribe(scrollToActiveHit)
+
 render(
     <Provider store={store}>
         <App />

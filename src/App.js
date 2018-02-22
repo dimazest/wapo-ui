@@ -54,7 +54,10 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit}
                          const date = new Date(s.date)
 
                          return (
-                             <li className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}>
+                    <li
+                        className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}
+                        id={`hit-${i}`}
+                    >
                                  <a
                                      href={s.url}
                                      className={"card-title h4" + (i !== active_hit ? " text-muted" : "")}
