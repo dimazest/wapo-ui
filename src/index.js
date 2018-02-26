@@ -7,6 +7,9 @@ import {createBrowserHistory, routerReducer, routerMiddleware, startListener} fr
 import thunkMiddleware from 'redux-thunk'
 import {bindShortcuts} from 'redux-shortcuts'
 
+import * as storage from 'redux-storage'
+import createEngine from 'redux-storage-engine-localstorage'
+
 import elasticsearch from 'elasticsearch'
 
 import {hashUpdated, submitQuery, selectNext, selectPrevious} from './actions'
@@ -19,10 +22,14 @@ window.client = new elasticsearch.Client({
 
 const history = createBrowserHistory()
 
-const rootReducer = combineReducers({
+const rootReducer = storage.reducer(combineReducers({
     ...reducers,
     router: routerReducer
-})
+}))
+
+const storageEngine = createEngine('trec-news-wapo');
+const storageMiddleware = storage.createMiddleware(storageEngine)
+const createStoreWithMiddleware = applyMiddleware(storageMiddleware)(createStore)
 
 const initialState = {
     frontend: {
@@ -33,7 +40,7 @@ const initialState = {
         queryInputFocused: false
     }
 }
-const store = createStore(
+const store = createStoreWithMiddleware(
     rootReducer,
     initialState,
     applyMiddleware(
@@ -42,6 +49,9 @@ const store = createStore(
         thunkMiddleware,
     )
 )
+
+const load = storage.createLoader(storageEngine)
+load(store)
 
 startListener(history, store)
 
