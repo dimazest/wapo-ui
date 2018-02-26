@@ -30,6 +30,7 @@ const initialState = {
         from: 0,
         size: 10,
         active_hit: 0,
+        queryInputFocused: false
     }
 }
 const store = createStore(

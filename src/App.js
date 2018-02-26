@@ -5,11 +5,11 @@ import Waypoint from 'react-waypoint';
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css'
 
-import {submitQuery, changeQuery, increaseHitsCount, linkClick} from './actions'
+import {submitQuery, changeQuery, increaseHitsCount, linkClick, queryInputFocusChange} from './actions'
 
 
-let QueryForm = ({queryText, onChangeQuery, onSubmitQuery}) => {
-    return (
+let QueryForm = ({queryText, onChangeQuery, onSubmitQuery,
+                  onInputFocus, onInputBlur, queryInputFocused}) => ([
         <div className="mx-auto">
             <form className="form-inline mt-2 mt-md-0"
                   onSubmit={e => {
@@ -18,23 +18,35 @@ let QueryForm = ({queryText, onChangeQuery, onSubmitQuery}) => {
                   }}
             >
                 <div className="input-group">
-                    <input className="form-control" type="text" placeholder="Search" aria-label="Search" style={{"width": "600px"}}
+                    <input className="form-control" placeholder="Search" aria-label="Search" style={{"width": "600px"}}
                            value={queryText}
+                           type="search"
                            onChange={e => onChangeQuery(e.target.value)}
+                           onFocus={onInputFocus}
+                           onBlur={onInputBlur}
                     />
                     <div className="input-group-append">
                         <button className="btn btn-success" type="submit">Search</button>
                     </div>
                 </div>
             </form>
-      </div>
-    )
-}
+        </div>,
+        <span class="navbar-text" style={{visibility: queryInputFocused ? "hidden" : "visible"}}>
+            <kbd>j</kbd>: next item, <kbd>k</kbd>: previous item
+        </span>
+        : null
+])
+
 QueryForm = connect(
-    state => ({queryText: state.frontend.queryText.new}),
+    state => ({
+        queryText: state.frontend.queryText.new,
+        queryInputFocused: state.frontend.queryInputFocused
+    }),
     dispatch => ({
         onSubmitQuery: () => dispatch(submitQuery(true)),
-        onChangeQuery: text => dispatch(changeQuery(text))
+        onChangeQuery: text => dispatch(changeQuery(text)),
+        onInputFocus: () => dispatch(queryInputFocusChange(true)),
+        onInputBlur: () => dispatch(queryInputFocusChange(false))
     })
 )(QueryForm)
 

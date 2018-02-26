@@ -96,3 +96,10 @@ export const linkClick = i => {
 export const CHANGE_SELECTION = 'CHANGE_SELECTION'
 export const selectNext = (by=1) => ({type: CHANGE_SELECTION, by})
 export const selectPrevious = (by=-1) => ({type: CHANGE_SELECTION, by})
+
+export const QUERY_INPUT_FOCUS_CHANGE = 'QUERY_INPUT_FOCUS_CHANGE'
+export const queryInputFocusChange = (focused=true) => (
+    {
+        type: QUERY_INPUT_FOCUS_CHANGE, focused
+    }
+)
