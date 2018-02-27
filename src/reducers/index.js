@@ -1,12 +1,9 @@
-import {
-    CHANGE_QUERY, RENDER_NEW_QUERY, HASH_UPDATED, HITS_RECEIVED,
-    INCREASE_HITS_COUNT, LINK_CLICK, CHANGE_SELECTION, QUERY_INPUT_FOCUS_CHANGE
-} from '../actions'
+import * as actions from '../actions'
 
 
 const frontend = (state = {}, action) => {
     switch (action.type) {
-    case CHANGE_QUERY:
+    case actions.CHANGE_QUERY:
         return {
             ...state,
             queryText: {
@@ -14,7 +11,7 @@ const frontend = (state = {}, action) => {
                 new: action.text
             }
         }
-    case RENDER_NEW_QUERY:
+    case actions.RENDER_NEW_QUERY:
         return {
             ...state,
             queryText: {
@@ -23,7 +20,7 @@ const frontend = (state = {}, action) => {
             },
             active_hit: action.resetActiveHit ? 0 : state.active_hit
         }
-    case HASH_UPDATED:
+    case actions.HASH_UPDATED:
         return {
             ...state,
             queryText: {
@@ -32,22 +29,22 @@ const frontend = (state = {}, action) => {
                 new: action.query,
             }
         }
-    case INCREASE_HITS_COUNT:
+    case actions.INCREASE_HITS_COUNT:
         return {
             ...state,
             size: state.size + 10
         }
-    case LINK_CLICK:
+    case actions.LINK_CLICK:
         return {
             ...state,
             active_hit: action.i
         }
-    case CHANGE_SELECTION:
+    case actions.CHANGE_SELECTION:
         return {
             ...state,
             active_hit: Math.max(0, Math.min(state.active_hit + action.by, state.size - 1))
         }
-    case QUERY_INPUT_FOCUS_CHANGE:
+    case actions.QUERY_INPUT_FOCUS_CHANGE:
         return {
             ...state,
             queryInputFocused: action.focused
@@ -57,9 +54,9 @@ const frontend = (state = {}, action) => {
     }
 }
 
-const hits = (state = {}, action) => {
-    switch(action.type) {
-    case HITS_RECEIVED:
+const hits = (state={}, action) => {
+    switch (action.type) {
+    case actions.HITS_RECEIVED:
         return {
             ...state, ...action
         }
@@ -68,5 +65,25 @@ const hits = (state = {}, action) => {
     }
 }
 
-export default {frontend, hits}
+
+const relevance = (state={}, action) => {
+    switch (action.type) {
+    case actions.RELEVANCE_CLICK:
+        return {
+            ...state,
+            [action.user]: {
+                ...state[action.user],
+                [action.query]: {
+                    ...(state[action.user] || {})[action.query],
+                    [action.docID]: action.judgment,
+                }
+            }
+        }
+    default:
+        return state
+    }
+}
+
+
+export default {frontend, hits, relevance}
 

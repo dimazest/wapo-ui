@@ -103,3 +103,9 @@ export const queryInputFocusChange = (focused=true) => (
         type: QUERY_INPUT_FOCUS_CHANGE, focused
     }
 )
+
+export const RELEVANCE_CLICK = 'RELEVANCE_CLICK'
+export const relevanceClick = (user, query, docID, judgment=true) => ({
+    type: RELEVANCE_CLICK,
+    user, query, docID, judgment
+})

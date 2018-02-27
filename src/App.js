@@ -1,11 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Waypoint from 'react-waypoint';
+import Waypoint from 'react-waypoint'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css'
 
-import {submitQuery, changeQuery, increaseHitsCount, linkClick, queryInputFocusChange} from './actions'
+import 'open-iconic/font/css/open-iconic-bootstrap.css'
+
+import {submitQuery, changeQuery, increaseHitsCount, linkClick, queryInputFocusChange, relevanceClick} from './actions'
 
 
 let QueryForm = ({queryText, onChangeQuery, onSubmitQuery,
@@ -50,7 +52,7 @@ QueryForm = connect(
     })
 )(QueryForm)
 
-let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit}) => {
+let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit, relevance, user, onRelevanceClick}) => {
     if (hits && hits.body && hits.body.hits.total) {
         return (
             <div className="card">
@@ -65,17 +67,38 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit}
                          const title = h.title ? h.title[0].trim() : s.title
                          const date = new Date(s.date)
 
+                         const isRelevant = (relevance[user] !== undefined) && (relevance[user][queryText] !== undefined) && relevance[user][queryText][hit._id]
+
                          return (
-                    <li
-                        className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}
-                        id={`hit-${i}`}
-                    >
-                                 <a
-                                     href={s.url}
-                                     className={"card-title h4" + (i !== active_hit ? " text-muted" : "")}
-                                     dangerouslySetInnerHTML={{__html: title}}
-                                     onClick={(e) => onLinkClick(e, i)}
-                                 />
+                             <li
+                                 className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}
+                                 id={`hit-${i}`}
+                                 >
+                                 <div class="container">
+                                     <div class="row align-items-center">
+                                         <div class="col-11 mr-auto pl-0">
+                                             <a
+                                                 href={s.url}
+                                                 className={"card-title h4" + (i !== active_hit ? " text-muted" : "")}
+                                                 dangerouslySetInnerHTML={{__html: title}}
+                                                 onClick={(e) => onLinkClick(e, i)}
+                                             />
+                                         </div>
+                                         <div class="col-1">
+                                             <button
+                                                 type="button"
+                                                 class={"btn btn-small" + (
+                                                         isRelevant
+                                                         ? " btn-success"
+                                                         : " btn-outline-secondary"
+                                                 )}
+                                                 onClick={() => onRelevanceClick(user, queryText, hit._id, !isRelevant)}
+                                             >
+                                                 <span class="oi oi-thumb-up" />
+                                             </button>
+                                         </div>
+                                     </div>
+                                 </div>
                                  <p className="font-weight-light">
                                      <time dateTime={date} className="text-danger">{date.getMonth()}/{date.getDay()}/{date.getFullYear()}</time>. <a href={`#author:"${s.author}"`}>{s.author}</a> <a href={`#kicker:"${s.kicker}"`} className="badge badge-light">{s.kicker}</a>
                                  </p>
@@ -108,14 +131,17 @@ SearchResults = connect(
     store => ({
         queryText: store.frontend.queryText.current,
         hits: store.hits,
-        active_hit: store.frontend.active_hit
+        active_hit: store.frontend.active_hit,
+        relevance: store.relevance,
+        user: store.frontend.user,
     }),
     dispatch => ({
         onWaypointEnter: () => {
             dispatch(increaseHitsCount())
             dispatch(submitQuery())
         },
-        onLinkClick: (e, i) => {e.preventDefault(); dispatch(linkClick(i))}
+        onLinkClick: (e, i) => {e.preventDefault(); dispatch(linkClick(i))},
+        onRelevanceClick: (user, query, docID, judgment) => {dispatch(relevanceClick(user, query, docID, judgment))},
     })
 )(SearchResults)
 
