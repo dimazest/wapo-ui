@@ -211,7 +211,7 @@ let App = ({active_hit, hits, user, onSubmitCredentials, currentQuery}) => {
 
     return [
             <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-                <span className="navbar-brand">TREC News</span>
+                <span className="navbar-brand">WaPo</span>
                 <QueryForm />
             </nav>,
             currentQuery ?
