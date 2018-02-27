@@ -92,7 +92,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                  className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}
                                  id={`hit-${i}`}
                                  >
-                                 <div class="container">
+                                 <div class="container-fluid">
                                      <div class="row align-items-center">
                                          <div class="col-11 mr-auto pl-0">
                                              <a
