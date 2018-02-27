@@ -95,12 +95,15 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                  <div class="container-fluid">
                                      <div class="row align-items-center">
                                          <div class="col-11 mr-auto pl-0">
+                                             <h4>
+                                             <span className={"badge mr-2" + (isActiveHit ? " badge-primary" : " badge-secondary")}>{i+1}</span>
                                              <a
                                                  href={s.url}
-                                                 className={"card-title h4" + (!isActiveHit ? " text-muted" : "")}
+                                                 className={(!isActiveHit ? "text-muted" : "")}
                                                  dangerouslySetInnerHTML={{__html: title}}
                                                  onClick={(e) => onLinkClick(e, i)}
                                              />
+                                             </h4>
                                          </div>
                                          <div class="col-1">
                                              <button
