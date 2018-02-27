@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import './App.css'
 
 import 'open-iconic/font/css/open-iconic-bootstrap.css'
+import dateFormat from 'dateformat'
 
 import {submitQuery, changeQuery, increaseHitsCount, linkClick, queryInputFocusChange,
         relevanceClick, setCredentials
@@ -96,13 +97,13 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                      <div class="row align-items-center">
                                          <div class="col-11 mr-auto pl-0">
                                              <h4>
-                                             <span className={"badge mr-2" + (isActiveHit ? " badge-primary" : " badge-secondary")}>{i+1}</span>
-                                             <a
-                                                 href={s.url}
-                                                 className={(!isActiveHit ? "text-muted" : "")}
-                                                 dangerouslySetInnerHTML={{__html: title}}
-                                                 onClick={(e) => onLinkClick(e, i)}
-                                             />
+                                                 <span className={"badge mr-2" + (isActiveHit ? " badge-primary" : " badge-secondary")}>{i+1}</span>
+                                                 <a
+                                                     href={s.url}
+                                                     className={(!isActiveHit ? "text-muted" : "")}
+                                                     dangerouslySetInnerHTML={{__html: title}}
+                                                     onClick={(e) => onLinkClick(e, i)}
+                                                 />
                                              </h4>
                                          </div>
                                          <div class="col-1">
@@ -121,7 +122,11 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                      </div>
                                  </div>
                                  <p className="font-weight-light">
-                                     <time dateTime={date} className="text-danger">{date.getMonth()}/{date.getDay()}/{date.getFullYear()}</time>. <a href={`#author:"${s.author}"`}>{s.author}</a> <a href={`#kicker:"${s.kicker}"`} className="badge badge-light">{s.kicker}</a>
+                                     <time dateTime={date} className="text-secondary mr-1">
+                                         {dateFormat(date, "shortDate")}
+                                     </time>
+                                     <a href={`#author:"${s.author}"`} className="mr-1">{s.author}</a>
+                                     <a href={`#kicker:"${s.kicker}"`} className="badge badge-light">{s.kicker}</a>
                                  </p>
                                  {(h.text && h.text.length) ?
                                   <ul>

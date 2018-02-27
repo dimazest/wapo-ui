@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.0.0",
+    "dateformat": "^3.0.3",
     "decode-uri-component": "^0.2.0",
     "elasticsearch": "^14.1.0",
     "jquery": "^3.3.1",
