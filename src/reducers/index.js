@@ -49,6 +49,11 @@ const frontend = (state = {}, action) => {
             ...state,
             queryInputFocused: action.focused
         }
+    case actions.SET_CREDENTIALS:
+        return {
+            ...state,
+            user: action.userName,
+        }
     default:
         return state
     }

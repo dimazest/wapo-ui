@@ -7,48 +7,65 @@ import './App.css'
 
 import 'open-iconic/font/css/open-iconic-bootstrap.css'
 
-import {submitQuery, changeQuery, increaseHitsCount, linkClick, queryInputFocusChange, relevanceClick} from './actions'
+import {submitQuery, changeQuery, increaseHitsCount, linkClick, queryInputFocusChange,
+        relevanceClick, setCredentials
+} from './actions'
 
 
 let QueryForm = ({queryText, onChangeQuery, onSubmitQuery,
-                  onInputFocus, onInputBlur, queryInputFocused}) => ([
-        <div className="mx-auto">
-            <form className="form-inline mt-2 mt-md-0"
-                  onSubmit={e => {
-                          e.preventDefault()
-                          onSubmitQuery()
-                  }}
-            >
-                <div className="input-group">
-                    <input className="form-control" placeholder="Search" aria-label="Search" style={{"width": "600px"}}
-                           value={queryText}
-                           type="search"
-                           onChange={e => onChangeQuery(e.target.value)}
-                           onFocus={onInputFocus}
-                           onBlur={onInputBlur}
-                    />
-                    <div className="input-group-append">
-                        <button className="btn btn-success" type="submit">Search</button>
-                    </div>
-                </div>
-            </form>
-        </div>,
-        <span class="navbar-text" style={{visibility: queryInputFocused ? "hidden" : "visible"}}>
-            <kbd>j</kbd>: next item, <kbd>k</kbd>: previous item
-        </span>
-        : null
-])
+                  onInputFocus, onInputBlur, queryInputFocused, user, setCredentials}) => ([
+                      <div className="mx-auto">
+                          <form className="form-inline mt-2 mt-md-0"
+                                onSubmit={e => {
+                                        e.preventDefault()
+                                        onSubmitQuery()
+                                }}
+                          >
+                              <div className="input-group">
+                                  <div class="input-group-prepend">
+                                      <span
+                                          class="input-group-text" id="username-prepend"
+                                      >
+                                          <span class="oi oi-person mr-1"></span>
+                                          <span
+                                              onClick={() => setCredentials(null)}
+                                              style={{cursor: "default"}}
+                                          >
+                                              {user}
+                                          </span>
+                                      </span>
+                                  </div>
+                                  <input className="form-control" placeholder="Search" aria-label="Search" style={{"width": "600px"}}
+                                         value={queryText}
+                                         type="search"
+                                         onChange={e => onChangeQuery(e.target.value)}
+                                         onFocus={onInputFocus}
+                                         onBlur={onInputBlur}
+                                  />
+                                  <div className="input-group-append">
+                                      <button className="btn btn-success" type="submit">Search</button>
+                                  </div>
+                              </div>
+                          </form>
+                      </div>,
+                      <span class="navbar-text" style={{visibility: queryInputFocused ? "hidden" : "visible"}}>
+                          <kbd>j</kbd>: next item, <kbd>k</kbd>: previous item
+                      </span>
+                      : null
+                  ])
 
 QueryForm = connect(
     state => ({
         queryText: state.frontend.queryText.new,
-        queryInputFocused: state.frontend.queryInputFocused
+        queryInputFocused: state.frontend.queryInputFocused,
+        user: state.frontend.user,
     }),
     dispatch => ({
         onSubmitQuery: () => dispatch(submitQuery(true)),
         onChangeQuery: text => dispatch(changeQuery(text)),
         onInputFocus: () => dispatch(queryInputFocusChange(true)),
-        onInputBlur: () => dispatch(queryInputFocusChange(false))
+        onInputBlur: () => dispatch(queryInputFocusChange(false)),
+        setCredentials: (userName) => dispatch(setCredentials(userName)),
     })
 )(QueryForm)
 
@@ -153,10 +170,43 @@ const WaPo = ({wapo_url}) => {
            />
 }
 
-let App = ({active_hit, hits}) => {
+let App = ({active_hit, hits, user, onSubmitCredentials}) => {
     hits = hits.body ? hits.body.hits.hits : null
     const wapo_url = (hits && active_hit >= 0 && hits[active_hit]) ? hits[active_hit]._source.url : null
-    
+
+    if (!user) {
+        let input
+        return <div className="jumbotron jumbotron-fluid">
+            <div className="container">
+                <h1 className="display-4">Please sign in!</h1>
+                <p className="lead">
+                    You need to provide a unique idenifier, for example your login.
+                </p>
+                <form
+                    onSubmit={() => onSubmitCredentials(input.value)}
+                >
+                    <div className="input-group input-group-lg">
+                        <div className="input-group-prepend">
+                            <span className="input-group-text">
+                                <span class="oi oi-person" /></span>
+                        </div>
+                        <input
+                            type="text" className="form-control" placeholder="Anything that uniquely identifies you..."
+                            ref = {i => input = i} 
+                        />
+                        <div className="input-group-append">
+                            <button
+                                className="btn btn-primary" type="submit"
+                            >
+                                Sign in
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+
     return (
         <div>
             <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -181,7 +231,11 @@ let App = ({active_hit, hits}) => {
 App = connect(
     store => ({
         active_hit: store.frontend.active_hit,
-        hits: store.hits
+        hits: store.hits,
+        user: store.frontend.user,
+    }),
+    dispatch => ({
+        onSubmitCredentials: userName => dispatch(setCredentials(userName)),
     })
 )(App)
 export default App;

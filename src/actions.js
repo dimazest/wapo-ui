@@ -109,3 +109,12 @@ export const relevanceClick = (user, query, docID, judgment=true) => ({
     type: RELEVANCE_CLICK,
     user, query, docID, judgment
 })
+
+
+export const SET_CREDENTIALS = 'SET_CREDENTIALS'
+export const setCredentials = (userName) => (
+    {
+        type: SET_CREDENTIALS,
+        userName
+    }
+)
