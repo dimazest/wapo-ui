@@ -107,7 +107,11 @@ function scrollToActiveHit() {
     if (previous !== current) {
         const element = document.getElementById(`hit-${current}`)
         if (element) {
-            element.scrollIntoView(true)
+            if (element.scrollIntoViewIfNeeded) {
+                element.scrollIntoViewIfNeeded(false)
+            } else {
+                element.scrollIntoView(true)
+            }
             currentActiveHit = current
         }
     }
