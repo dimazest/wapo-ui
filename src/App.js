@@ -86,7 +86,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                          const date = new Date(s.date)
 
                          const isRelevant = (relevance[user] !== undefined) && (relevance[user][queryText] !== undefined) && relevance[user][queryText][hit._id]
-
+                         const isActiveHit = i === active_hit
                          return (
                              <li
                                  className={"list-group-item" + (i % 2 ? " bg-light" : "")} key={hit._id}
@@ -97,7 +97,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                          <div class="col-11 mr-auto pl-0">
                                              <a
                                                  href={s.url}
-                                                 className={"card-title h4" + (i !== active_hit ? " text-muted" : "")}
+                                                 className={"card-title h4" + (!isActiveHit ? " text-muted" : "")}
                                                  dangerouslySetInnerHTML={{__html: title}}
                                                  onClick={(e) => onLinkClick(e, i)}
                                              />
@@ -107,8 +107,8 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                                  type="button"
                                                  class={"btn btn-small" + (
                                                          isRelevant
-                                                         ? " btn-success"
-                                                         : " btn-outline-secondary"
+                                                         ? (isActiveHit ? " btn-success" : " btn-outline-success")
+                                                         : (isActiveHit ? " btn-secondary" : " btn-outline-secondary")
                                                  )}
                                                  onClick={() => onRelevanceClick(user, queryText, hit._id, !isRelevant)}
                                              >
