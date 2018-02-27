@@ -37,6 +37,7 @@ let QueryForm = ({queryText, onChangeQuery, onSubmitQuery,
                                       </span>
                                   </div>
                                   <input className="form-control" placeholder="Search" aria-label="Search" style={{"width": "600px"}}
+                                         id="searchInput"
                                          value={queryText}
                                          type="search"
                                          onChange={e => onChangeQuery(e.target.value)}
@@ -50,9 +51,14 @@ let QueryForm = ({queryText, onChangeQuery, onSubmitQuery,
                               </div>
                           </form>
                       </div>,
-                      <span class="navbar-text" style={{visibility: queryInputFocused ? "hidden" : "visible"}}>
-                          <kbd>j</kbd>: next item, <kbd>k</kbd>: previous item, <kbd>space</kbd>: toggle relevance
-                      </span>
+                      <span class="navbar-text">
+                          <span style={{visibility: queryInputFocused ? "hidden" : "visible"}}>
+                              <kbd>j</kbd>: next item,
+                              <kbd>k</kbd>: previous item,
+                              <kbd>space</kbd>: toggle relevance,
+                          </span>
+                      <kbd>esc</kbd>: switch
+                          </span>
                       : null
                   ])
 

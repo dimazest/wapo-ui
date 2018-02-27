@@ -5,7 +5,7 @@ import {combineReducers, createStore, applyMiddleware} from 'redux'
 import logger from 'redux-logger'
 import {createBrowserHistory, routerReducer, routerMiddleware, startListener} from 'redux-first-routing'
 import thunkMiddleware from 'redux-thunk'
-import {bindShortcuts} from 'redux-shortcuts'
+import {bindShortcuts, mousetrap, Mousetrap} from 'redux-shortcuts'
 
 import * as storage from 'redux-storage'
 import createEngine from 'redux-storage-engine-localstorage'
@@ -97,8 +97,33 @@ bindShortcuts(
             }
         },
         true,
-    ]
+    ],
+    [
+        ['esc'],
+        () => {
+            const searchInput = document.getElementById("searchInput")
+
+            if (searchInput === document.activeElement) {
+                searchInput.blur()
+            } else {
+                searchInput.focus({preventScroll: false})
+            }
+
+            return {type: ""}
+        },
+        true
+    ],
 )(store.dispatch)
+
+mousetrap.stopCallback = (e, element, combo, sequence) => {
+    const searchInput = document.getElementById("searchInput")
+
+    if ((element === searchInput) & (combo === 'esc')) {
+        return false
+    }
+
+    return Mousetrap.stopCallback(e, element, combo, sequence)
+}
 
 
 let currentActiveHit
