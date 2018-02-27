@@ -12,6 +12,8 @@ import createEngine from 'redux-storage-engine-localstorage'
 
 import elasticsearch from 'elasticsearch'
 
+import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed'
+
 import * as actions from './actions'
 import reducers from './reducers'
 import App from './App'
@@ -107,11 +109,7 @@ function scrollToActiveHit() {
     if (previous !== current) {
         const element = document.getElementById(`hit-${current}`)
         if (element) {
-            if (element.scrollIntoViewIfNeeded) {
-                element.scrollIntoViewIfNeeded(false)
-            } else {
-                element.scrollIntoView(true)
-            }
+            scrollIntoViewIfNeeded(element)
             currentActiveHit = current
         }
     }
