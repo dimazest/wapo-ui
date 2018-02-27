@@ -41,6 +41,7 @@ let QueryForm = ({queryText, onChangeQuery, onSubmitQuery,
                                          onChange={e => onChangeQuery(e.target.value)}
                                          onFocus={onInputFocus}
                                          onBlur={onInputBlur}
+                                         autoFocus={true}
                                   />
                                   <div className="input-group-append">
                                       <button className="btn btn-success" type="submit">Search</button>
@@ -192,7 +193,8 @@ let App = ({active_hit, hits, user, onSubmitCredentials, currentQuery}) => {
                         </div>
                         <input
                             type="text" className="form-control" placeholder="Anything that uniquely identifies you..."
-                            ref = {i => input = i} 
+                            ref = {i => input = i}
+                            autoFocus={true}
                         />
                         <div className="input-group-append">
                             <button
