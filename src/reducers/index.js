@@ -16,7 +16,7 @@ const frontend = (state = {}, action) => {
             ...state,
             queryText: {
                 ...state.queryText,
-                current: state.queryText.new
+                current: state.queryText.new || null
             },
             active_hit: action.resetActiveHit ? 0 : state.active_hit
         }

@@ -170,7 +170,7 @@ const WaPo = ({wapo_url}) => {
            />
 }
 
-let App = ({active_hit, hits, user, onSubmitCredentials}) => {
+let App = ({active_hit, hits, user, onSubmitCredentials, currentQuery}) => {
     hits = hits.body ? hits.body.hits.hits : null
     const wapo_url = (hits && active_hit >= 0 && hits[active_hit]) ? hits[active_hit]._source.url : null
 
@@ -207,32 +207,40 @@ let App = ({active_hit, hits, user, onSubmitCredentials}) => {
         </div>
     }
 
-    return (
-        <div>
+    return [
             <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
                 <span className="navbar-brand">TREC News</span>
                 <QueryForm />
-            </nav>
-            <main role="main" className="containerFluid mx-5" style={{position: 'relative'}}>
-                <div className="row">
-                    <div className="col-6" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
-                        <SearchResults />
-                    </div>
-                    {wapo_url &&
-                     <div className="col-6 offset-6 bg-light" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
-                         <WaPo wapo_url={wapo_url} />
+            </nav>,
+            currentQuery ?
+             <main role="main" className="containerFluid mx-5" style={{position: 'relative'}}>
+                 <div className="row">
+                     <div className="col-6" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
+                         <SearchResults />
                      </div>
-                    }
-                </div>
-            </main>
-        </div>
-    )
+                     {wapo_url &&
+                      <div className="col-6 offset-6 bg-light" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
+                          <WaPo wapo_url={wapo_url} />
+                      </div>
+                     }
+                 </div>
+             </main>
+             :
+             <div className="jumbotron jumbotron-fluid">
+                 <div className="container">
+                     <h1>
+                         Search for <a href="#Interesting things">interesting things</a> or anything else.
+                     </h1>
+                 </div>
+             </div>
+    ]
 }
 App = connect(
     store => ({
         active_hit: store.frontend.active_hit,
         hits: store.hits,
         user: store.frontend.user,
+        currentQuery: store.frontend.queryText.current,
     }),
     dispatch => ({
         onSubmitCredentials: userName => dispatch(setCredentials(userName)),
