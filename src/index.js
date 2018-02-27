@@ -12,7 +12,7 @@ import createEngine from 'redux-storage-engine-localstorage'
 
 import elasticsearch from 'elasticsearch'
 
-import {hashUpdated, submitQuery, selectNext, selectPrevious} from './actions'
+import * as actions from './actions'
 import reducers from './reducers'
 import App from './App'
 
@@ -40,7 +40,7 @@ const initialState = {
         queryInputFocused: false,
         user: null,
     },
-    relevance: {} // user -> query -> docID -> judgment
+    relevance: {}
 }
 const store = createStoreWithMiddleware(
     rootReducer,
@@ -63,19 +63,39 @@ store.subscribe(() => {
     currentHash = store.getState().router.hash
 
     if (previousHash !== currentHash) {
-        store.dispatch(hashUpdated(currentHash))
-        store.dispatch(submitQuery())
+        store.dispatch(actions.hashUpdated(currentHash))
+        store.dispatch(actions.submitQuery())
     }
 })
 
 if (currentHash) {
-    store.dispatch(hashUpdated(currentHash))
-    store.dispatch(submitQuery())
+    store.dispatch(actions.hashUpdated(currentHash))
+    store.dispatch(actions.submitQuery())
 }
 
 bindShortcuts(
-    [['n', 'j', 'down'], selectNext],
-    [['p', 'k', 'up'], selectPrevious],
+    [['n', 'j', 'down'], actions.selectNext],
+    [['p', 'k', 'up'], actions.selectPrevious],
+    [
+        ['space'],
+        () => {
+            const state = store.getState()
+
+            const user = state.frontend.user
+            const query = state.frontend.queryText.current
+            const activeHit = state.frontend.active_hit
+
+            if (!user) {return {type: ""}}
+
+            const hits = (state.hits.body || {hits: {hits: []}}).hits.hits
+            const hit = hits[activeHit]
+            if (hit !== undefined) {
+                const j = ((state.relevance[user] || {})[query] || {})[hit._id]
+                return actions.relevanceClick(user, query, hit._id, !j)
+            }
+        },
+        true,
+    ]
 )(store.dispatch)
 
 

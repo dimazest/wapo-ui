@@ -50,7 +50,7 @@ let QueryForm = ({queryText, onChangeQuery, onSubmitQuery,
                           </form>
                       </div>,
                       <span class="navbar-text" style={{visibility: queryInputFocused ? "hidden" : "visible"}}>
-                          <kbd>j</kbd>: next item, <kbd>k</kbd>: previous item
+                          <kbd>j</kbd>: next item, <kbd>k</kbd>: previous item, <kbd>space</kbd>: toggle relevance
                       </span>
                       : null
                   ])
@@ -189,7 +189,7 @@ let App = ({active_hit, hits, user, onSubmitCredentials, currentQuery}) => {
                     <div className="input-group input-group-lg">
                         <div className="input-group-prepend">
                             <span className="input-group-text">
-                                <span class="oi oi-person" /></span>
+                                <span className="oi oi-person" /></span>
                         </div>
                         <input
                             type="text" className="form-control" placeholder="Anything that uniquely identifies you..."
