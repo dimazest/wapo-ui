@@ -46,7 +46,12 @@ let QueryForm = ({queryText, onChangeQuery, onSubmitQuery,
                                          autoFocus={true}
                                   />
                                   <div className="input-group-append">
-                                      <button className="btn btn-success" type="submit">Search</button>
+                                      <button
+                                          className={"btn " +(queryInputFocused ? " btn-primary" : " btn-secondary")}
+                                          type="submit"
+                                      >
+                                          Search
+                                      </button>
                                   </div>
                               </div>
                           </form>
@@ -117,7 +122,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                                  type="button"
                                                  class={"btn btn-small" + (
                                                          isRelevant
-                                                         ? (isActiveHit ? " btn-success" : " btn-outline-success")
+                                                         ? " btn-success"
                                                          : (isActiveHit ? " btn-secondary" : " btn-outline-secondary")
                                                  )}
                                                  onClick={() => onRelevanceClick(user, queryText, hit._id, !isRelevant)}
@@ -185,7 +190,7 @@ const WaPo = ({wapo_url}) => {
            />
 }
 
-let App = ({active_hit, hits, user, onSubmitCredentials, currentQuery}) => {
+let App = ({active_hit, hits, user, onSubmitCredentials, currentQuery, queryInputFocused}) => {
     hits = hits.body ? hits.body.hits.hits : null
     const wapo_url = (hits && active_hit >= 0 && hits[active_hit]) ? hits[active_hit]._source.url : null
 
@@ -224,39 +229,43 @@ let App = ({active_hit, hits, user, onSubmitCredentials, currentQuery}) => {
     }
 
     return [
-            <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-                <span className="navbar-brand">WaPo</span>
-                <QueryForm />
-            </nav>,
-            currentQuery ?
-             <main role="main" className="containerFluid mx-5" style={{position: 'relative'}}>
-                 <div className="row">
-                     <div className="col-6" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
-                         <SearchResults />
-                     </div>
-                     {wapo_url &&
-                      <div className="col-6 offset-6 bg-light" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
-                          <WaPo wapo_url={wapo_url} />
-                      </div>
-                     }
+        <nav className={
+            "navbar navbar-expand-md fixed-top"
+                      + (queryInputFocused ? " navbar-dark bg-dark" : " navbar-light bg-light")
+        }>
+            <span className="navbar-brand">WaPo</span>
+            <QueryForm />
+        </nav>,
+        currentQuery ?
+        <main role="main" className="containerFluid mx-5" style={{position: 'relative'}}>
+            <div className="row">
+                <div className="col-6" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
+                    <SearchResults />
+                </div>
+                {wapo_url &&
+                 <div className="col-6 offset-6 bg-light" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
+                     <WaPo wapo_url={wapo_url} />
                  </div>
-             </main>
-             :
-             <div className="jumbotron jumbotron-fluid">
-                 <div className="container">
-                     <h1>
-                         Search for <a href="#Interesting things">interesting things</a> or anything else.
-                     </h1>
-                 </div>
-             </div>
+                }
+            </div>
+        </main>
+        :
+        <div className="jumbotron jumbotron-fluid">
+            <div className="container">
+                <h1>
+                    Search for <a href="#Interesting things">interesting things</a> or anything else.
+                </h1>
+            </div>
+        </div>
     ]
 }
 App = connect(
-    store => ({
-        active_hit: store.frontend.active_hit,
-        hits: store.hits,
-        user: store.frontend.user,
-        currentQuery: store.frontend.queryText.current,
+    state => ({
+        active_hit: state.frontend.active_hit,
+        hits: state.hits,
+        user: state.frontend.user,
+        currentQuery: state.frontend.queryText.current,
+        queryInputFocused: state.frontend.queryInputFocused,
     }),
     dispatch => ({
         onSubmitCredentials: userName => dispatch(setCredentials(userName)),
