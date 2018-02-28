@@ -112,9 +112,10 @@ export const relevanceClick = (user, query, docID, judgment=true) => ({
 
 
 export const SET_CREDENTIALS = 'SET_CREDENTIALS'
-export const setCredentials = (userName) => (
-    {
-        type: SET_CREDENTIALS,
-        userName
-    }
-)
+export const setCredentials = (userName) => ({
+    type: SET_CREDENTIALS,
+    userName
+})
+
+export const TOGGLE_TOPIC_FORM = 'TOGGLE_TOPIC_FORM'
+export const toggleTopicForm = () => ({type: TOGGLE_TOPIC_FORM})

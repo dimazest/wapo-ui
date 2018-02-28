@@ -54,6 +54,11 @@ const frontend = (state = {}, action) => {
             ...state,
             user: action.userName,
         }
+    case actions.TOGGLE_TOPIC_FORM:
+        return {
+            ...state,
+            showTopicForm: !state.showTopicForm,
+        }
     default:
         return state
     }

@@ -41,6 +41,7 @@ const initialState = {
         active_hit: 0,
         queryInputFocused: false,
         user: null,
+        showTopicForm: false,
     },
     relevance: {}
 }
