@@ -98,17 +98,41 @@ export const selectNext = (by=1) => ({type: CHANGE_SELECTION, by})
 export const selectPrevious = (by=-1) => ({type: CHANGE_SELECTION, by})
 
 export const QUERY_INPUT_FOCUS_CHANGE = 'QUERY_INPUT_FOCUS_CHANGE'
-export const queryInputFocusChange = (focused=true) => (
-    {
+export const queryInputFocusChange = (focused=true) => ({
         type: QUERY_INPUT_FOCUS_CHANGE, focused
-    }
-)
+})
+
 
 export const RELEVANCE_CLICK = 'RELEVANCE_CLICK'
-export const relevanceClick = (user, query, docID, judgment=true) => ({
-    type: RELEVANCE_CLICK,
-    user, query, docID, judgment
-})
+export const relevanceClick = (user, query, docID, judgment=true) => (
+    dispatch => {(
+        fetch(
+            `${window.api_root}/relevance`,
+            {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/vnd.pgrst.object+json',
+                    'Prefer': 'resolution=merge-duplicates,return=representation',
+                },
+                body: JSON.stringify({
+                    user_name: user,
+                    query: query,
+                    document_id: docID,
+                    judgment: judgment ? 1 : 0,
+                })
+            },
+        )
+            .then(r => r.json())
+            .then(d => dispatch({
+                type: RELEVANCE_CLICK,
+                user: d.user_name,
+                query: d.query,
+                docID: d.document_id,
+                judgment: d.judgment,
+            }))
+    )}
+)
 
 
 export const SET_CREDENTIALS = 'SET_CREDENTIALS'

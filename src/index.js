@@ -21,6 +21,7 @@ import App from './App'
 window.client = new elasticsearch.Client({
     host: 'localhost:9200',
 })
+window.api_root = 'http://localhost:3300'
 
 const history = createBrowserHistory()
 
