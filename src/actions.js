@@ -1,6 +1,8 @@
 import {push} from 'redux-first-routing'
 import decodeUriComponent from 'decode-uri-component'
 
+import qs from 'qs'
+
 
 export const RENDER_NEW_QUERY = 'RENDER_NEW_QUERY'
 export const renderNewQuery = (resetActiveHit=false) => {
@@ -102,44 +104,51 @@ export const queryInputFocusChange = (focused=true) => ({
         type: QUERY_INPUT_FOCUS_CHANGE, focused
 })
 
-
 export const RELEVANCE_CLICK = 'RELEVANCE_CLICK'
 export const relevanceClick = (user, query, docID, judgment=true) => (
-    dispatch => {(
-        fetch(
-            `${window.api_root}/relevance`,
-            {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    'Accept': 'application/vnd.pgrst.object+json',
-                    'Prefer': 'resolution=merge-duplicates,return=representation',
-                },
-                body: JSON.stringify({
-                    user_name: user,
-                    query: query,
-                    document_id: docID,
-                    judgment: judgment ? 1 : 0,
-                })
+    dispatch => fetch(
+        `${window.api_root}/relevance`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Accept': 'application/vnd.pgrst.object+json',
+                'Prefer': 'resolution=merge-duplicates,return=representation',
             },
-        )
-            .then(r => r.json())
-            .then(d => dispatch({
-                type: RELEVANCE_CLICK,
-                user: d.user_name,
-                query: d.query,
-                docID: d.document_id,
-                judgment: d.judgment,
-            }))
-    )}
-)
+            body: JSON.stringify({
+                user_name: user,
+                query: query,
+                document_id: docID,
+                judgment: judgment ? 1 : 0,
+            })})
+                 .then(r => r.json())
+                 .then(d => dispatch({
+                     type: RELEVANCE_CLICK,
+                     user: d.user_name,
+                     query: d.query,
+                     docID: d.document_id,
+                     judgment: d.judgment,
+                 })))
+
+
+export const LOAD_JUDGMENTS = 'LOAD_JUDGMENTS'
+export const loadJudgments = payload => ({type: LOAD_JUDGMENTS, payload})
 
 
 export const SET_CREDENTIALS = 'SET_CREDENTIALS'
-export const setCredentials = (userName) => ({
-    type: SET_CREDENTIALS,
-    userName
-})
+export const setCredentials = (userName) => (
+    dispatch => {
+        dispatch({type: SET_CREDENTIALS, userName})
+
+        if (!userName) {return}
+
+        const params = qs.stringify({user_name: `eq.${userName}`})
+
+        return fetch(`${window.api_root}/relevance?${params}`)
+            .then(r => r.json())
+            .then(d => dispatch(loadJudgments(d)))
+    }
+)
+
 
 export const TOGGLE_TOPIC_FORM = 'TOGGLE_TOPIC_FORM'
 export const toggleTopicForm = () => ({type: TOGGLE_TOPIC_FORM})

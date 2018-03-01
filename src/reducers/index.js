@@ -78,15 +78,24 @@ const hits = (state={}, action) => {
 
 const relevance = (state={}, action) => {
     switch (action.type) {
+    case actions.LOAD_JUDGMENTS: {
+        const judgments = {}
+
+        for (let p of action.payload){
+            judgments[p.query] = {
+                ...judgments[p.query],
+                [p.document_id]: p.judgment
+            }
+        }
+
+        return judgments
+    }
     case actions.RELEVANCE_CLICK:
         return {
             ...state,
-            [action.user]: {
-                ...state[action.user],
-                [action.query]: {
-                    ...(state[action.user] || {})[action.query],
-                    [action.docID]: action.judgment,
-                }
+            [action.query]: {
+                ...state[action.query],
+                [action.docID]: action.judgment,
             }
         }
     default:
