@@ -57,7 +57,7 @@ const frontend = (state = {}, action) => {
     case actions.TOGGLE_TOPIC_FORM:
         return {
             ...state,
-            showTopicForm: !state.showTopicForm,
+            showTopicForm: action.showTopicForm,
         }
     default:
         return state
@@ -103,6 +103,16 @@ const relevance = (state={}, action) => {
     }
 }
 
+const topic = (state={}, action) => {
+    switch (action.type) {
+    case actions.LOAD_TOPIC_INFO:
+        return {
+            ...action.payload,
+        }
+    default:
+        return state
+    }
 
-export default {frontend, hits, relevance}
+}
+export default {frontend, hits, relevance, topic}
 

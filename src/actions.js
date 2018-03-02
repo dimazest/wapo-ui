@@ -120,14 +120,14 @@ export const relevanceClick = (user, query, docID, judgment=true) => (
                 document_id: docID,
                 judgment: judgment ? 1 : 0,
             })})
-                 .then(r => r.json())
-                 .then(d => dispatch({
-                     type: RELEVANCE_CLICK,
-                     user: d.user_name,
-                     query: d.query,
-                     docID: d.document_id,
-                     judgment: d.judgment,
-                 })))
+        .then(r => r.json())
+        .then(d => dispatch({
+            type: RELEVANCE_CLICK,
+            user: d.user_name,
+            query: d.query,
+            docID: d.document_id,
+            judgment: d.judgment,
+        })))
 
 
 export const LOAD_JUDGMENTS = 'LOAD_JUDGMENTS'
@@ -150,5 +150,39 @@ export const setCredentials = (userName) => (
 )
 
 
+export const LOAD_TOPIC_INFO = 'LOAD_TOPIC_INFO'
 export const TOGGLE_TOPIC_FORM = 'TOGGLE_TOPIC_FORM'
-export const toggleTopicForm = () => ({type: TOGGLE_TOPIC_FORM})
+export const toggleTopicForm = (showTopicForm=true) => (
+    (dispatch, getState) => {
+        dispatch({type: TOGGLE_TOPIC_FORM, showTopicForm})
+
+        const query = getState().frontend.queryText.current
+        if (showTopicForm) {
+            const params = qs.stringify({query: `eq.${query}`})
+            return fetch(`${window.api_root}/topic?${params}`)
+                .then(r => r.json())
+                .then(d => dispatch({type: LOAD_TOPIC_INFO, payload: (d.length ? d[0] : {})}))
+        }
+
+    }
+)
+
+export const SAVE_TOPIC = 'SAVE_TOPIC'
+export const saveTopic = (title, description, narrative) => (
+    (dispatch, getState) => fetch(
+        `${window.api_root}/topic`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Accept': 'application/vnd.pgrst.object+json',
+                'Prefer': 'resolution=merge-duplicates,return=representation',
+            },
+            body: JSON.stringify({
+                query: getState().frontend.queryText.current,
+                title, description, narrative,
+            })})
+        .then(r => r.json())
+        .then(d => dispatch({
+            type: 'TOPIC_SAVED'
+        }))
+)

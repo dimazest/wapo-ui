@@ -241,18 +241,28 @@ UserForm = connect(
 )(UserForm)
 
 
-let TopicForm = ({hideTopicForm}) => {
+let TopicForm = ({hideTopicForm, submitTopicForm, topic, query}) => {
     let titleInput, descriptionInput, narrativeInput
     return <div className="jumbotron jumbotron-fluid">
         <div className="container">
-            <h1 className="display-4">Create a topic</h1>
+            <h1 className="display-4">Topic for query "{query}".</h1>
 
-            <form>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault()
+                    submitTopicForm(
+                        titleInput.value,
+                        descriptionInput.value,
+                        narrativeInput.value,
+                    )
+                }}
+            >
                 <div className="form-group">
                     <label htmlFor="topicTitleInput">Title</label>
                     <input type="text" className="form-control" id="topicTitleInput"
                            placeholder="A few keywords"
-                           ref = {element => titleInput = element}
+                           ref={element => titleInput = element}
+                           defaultValue={topic.title}
                     />
                 </div>
                 <div className="form-group">
@@ -260,7 +270,8 @@ let TopicForm = ({hideTopicForm}) => {
                     <input
                         type="text" className="form-control" id="topicDescriptonInput"
                         placeholder="A sentence"
-                        ref = {element => descriptionInput = element}
+                        ref={element => descriptionInput = element}
+                        defaultValue={topic.description}
                     />
                 </div>
                 <div className="form-group">
@@ -268,7 +279,8 @@ let TopicForm = ({hideTopicForm}) => {
                     <textarea type="text" className="form-control"
                               id="topicNarrativeInput"
                               placeholder="A paragraph"
-                              ref = {element => narrativeInput = element}
+                              ref={element => narrativeInput = element}
+                              defaultValue={topic.narrative}
                     />
                 </div>
                 <button type="submit" className="btn btn-primary">Save</button>
@@ -283,9 +295,10 @@ let TopicForm = ({hideTopicForm}) => {
     </div>
 }
 TopicForm = connect(
-    state => ({}),
+    state => ({topic: state.topic, query: state.frontend.queryText.current}),
     dispatch => ({
-        hideTopicForm: () => dispatch(actions.toggleTopicForm()),
+        hideTopicForm: () => dispatch(actions.toggleTopicForm(false)),
+        submitTopicForm: (title, description, narrative) => dispatch(actions.saveTopic(title, description, narrative)),
     })
 )(TopicForm)
 
