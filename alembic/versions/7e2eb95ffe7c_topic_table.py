@@ -19,6 +19,7 @@ depends_on = None
 def upgrade():
     op.create_table(
         'topic',
+        sa.Column('user_name', sa.String(50), primary_key=True),
         sa.Column('query', sa.String(250), primary_key=True),
         sa.Column('title', sa.String(1000), nullable=False),
         sa.Column('description', sa.Text, nullable=False),

@@ -154,14 +154,20 @@ export const LOAD_TOPIC_INFO = 'LOAD_TOPIC_INFO'
 export const TOGGLE_TOPIC_FORM = 'TOGGLE_TOPIC_FORM'
 export const toggleTopicForm = (showTopicForm=true) => (
     (dispatch, getState) => {
-        dispatch({type: TOGGLE_TOPIC_FORM, showTopicForm})
 
-        const query = getState().frontend.queryText.current
+        const state = getState()
+        const query = state.frontend.queryText.current
+        const user = state.frontend.user
         if (showTopicForm) {
-            const params = qs.stringify({query: `eq.${query}`})
+            const params = qs.stringify({query: `eq.${query}`, user_name: `eq.${user}`})
             return fetch(`${window.api_root}/topic?${params}`)
                 .then(r => r.json())
-                .then(d => dispatch({type: LOAD_TOPIC_INFO, payload: (d.length ? d[0] : {})}))
+                .then(d => {
+                    dispatch({type: LOAD_TOPIC_INFO, payload: (d.length ? d[0] : {})})
+                    dispatch({type: TOGGLE_TOPIC_FORM, showTopicForm})
+                })
+        } else {
+            dispatch({type: TOGGLE_TOPIC_FORM, showTopicForm})
         }
 
     }
@@ -169,20 +175,25 @@ export const toggleTopicForm = (showTopicForm=true) => (
 
 export const SAVE_TOPIC = 'SAVE_TOPIC'
 export const saveTopic = (title, description, narrative) => (
-    (dispatch, getState) => fetch(
-        `${window.api_root}/topic`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Accept': 'application/vnd.pgrst.object+json',
-                'Prefer': 'resolution=merge-duplicates,return=representation',
-            },
-            body: JSON.stringify({
-                query: getState().frontend.queryText.current,
-                title, description, narrative,
-            })})
-        .then(r => r.json())
-        .then(d => dispatch({
-            type: 'TOPIC_SAVED'
-        }))
+    (dispatch, getState) => {
+        const state = getState()
+        const query = state.frontend.queryText.current
+        const user_name = state.frontend.user
+
+        return fetch(
+            `${window.api_root}/topic`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/vnd.pgrst.object+json',
+                    'Prefer': 'resolution=merge-duplicates,return=representation',
+                },
+                body: JSON.stringify({
+                    user_name, query, title, description, narrative,
+                })})
+            .then(r => r.json())
+            .then(d => dispatch({
+                type: 'TOPIC_SAVED'
+            }))
+    }
 )

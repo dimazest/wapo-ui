@@ -44,7 +44,8 @@ const initialState = {
         user: null,
         showTopicForm: false,
     },
-    relevance: {}
+    relevance: {},
+    topic: {},
 }
 const store = createStoreWithMiddleware(
     rootReducer,
@@ -104,6 +105,8 @@ bindShortcuts(
         ['esc'],
         () => {
             const searchInput = document.getElementById("searchInput")
+
+            if (!searchInput) {return {type: ""}}
 
             if (searchInput === document.activeElement) {
                 searchInput.blur()

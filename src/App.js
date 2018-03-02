@@ -288,7 +288,7 @@ let TopicForm = ({hideTopicForm, submitTopicForm, topic, query}) => {
                     type="button" className="btn btn-danger ml-2"
                     onClick={hideTopicForm}
                 >
-                    Cancel
+                    Close
                 </button>
             </form>
         </div>
