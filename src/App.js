@@ -105,7 +105,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                          const title = h.title ? h.title[0].trim() : s.title
                          const date = new Date(s.date)
 
-                         const isRelevant = (relevance[queryText] || {})[s.url]
+                         const isRelevant = (relevance[queryText] || {})[hit._id]
                          const isActiveHit = i === active_hit
                          return (
                              <li
@@ -133,7 +133,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                                          ? " btn-success"
                                                          : (isActiveHit ? " btn-secondary" : " btn-outline-secondary")
                                                  )}
-                                                 onClick={() => onRelevanceClick(user, queryText, s.url, !isRelevant)}
+                                                 onClick={() => onRelevanceClick(user, queryText, hit._id, !isRelevant)}
                                              >
                                                  <span className="oi oi-thumb-up" />
                                              </button>

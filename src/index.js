@@ -95,8 +95,8 @@ bindShortcuts(
             const hits = (state.hits.body || {hits: {hits: []}}).hits.hits
             const hit = hits[activeHit]
             if (hit !== undefined) {
-                const j = (state.relevance[query] || {})[hit._source.url]
-                return actions.relevanceClick(user, query, hit._source.url, !j)
+                const j = (state.relevance[query] || {})[hit._id]
+                return actions.relevanceClick(user, query, hit._id, !j)
             }
         },
         true,
