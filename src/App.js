@@ -60,7 +60,7 @@ let QueryForm = ({
                         type="button"
                         onClick={onToggleTopicForm}
                     >
-                        Create a topic
+                        Manage the topic
                     </button>
                 </div>
             </div>
@@ -76,7 +76,6 @@ let QueryForm = ({
     </span>
     : null
 ])
-
 QueryForm = connect(
     state => ({
         queryText: state.frontend.queryText.new,
@@ -287,6 +286,7 @@ let TopicForm = ({hideTopicForm, submitTopicForm, topic, query}) => {
                               placeholder="A paragraph"
                               ref={element => narrativeInput = element}
                               defaultValue={topic.narrative}
+                              rows="5"
                     />
                 </div>
                 <button type="submit" className="btn btn-primary">Save</button>
