@@ -95,6 +95,7 @@ QueryForm = connect(
 
 let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit, relevance, user, onRelevanceClick}) => {
     if (hits && hits.body && hits.body.hits.total) {
+        var relevantCounter = 0
         return (
             <div className="card">
                 <div className="card-header">
@@ -109,6 +110,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                          const date = new Date(s.date)
 
                          const isRelevant = (relevance[queryText] || {})[hit._id]
+                         if (isRelevant) {relevantCounter += 1}
                          const isActiveHit = i === active_hit
                          return (
                              <li
@@ -138,7 +140,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                                  )}
                                                  onClick={() => onRelevanceClick(user, queryText, hit._id, !isRelevant)}
                                              >
-                                                 <span className="oi oi-thumb-up" />
+                                                 {isRelevant ? relevantCounter : <span className="oi oi-thumb-up" />}
                                              </button>
                                          </div>
                                      </div>
