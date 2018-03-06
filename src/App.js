@@ -323,18 +323,27 @@ let App = ({
             <QueryForm />
         </nav>,
         currentQuery ?
-        <main role="main" className="containerFluid mx-5" style={{position: 'relative'}}>
-            <div className="row">
-                <div className="col-6" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
-                    <SearchResults />
+            (hits.length || 0) > 0 ?
+            <main role="main" className="containerFluid mx-5" style={{position: 'relative'}}>
+                <div className="row">
+                    <div className="col-6" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
+                        <SearchResults />
+                    </div>
+                    {wapo_url &&
+                     <div className="col-6 offset-6 bg-light" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
+                         <WaPo wapo_url={wapo_url} />
+                     </div>
+                    }
                 </div>
-                {wapo_url &&
-                 <div className="col-6 offset-6 bg-light" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
-                     <WaPo wapo_url={wapo_url} />
-                 </div>
-                }
+            </main>
+            :
+            <div className="jumbotron jumbotron-fluid">
+                <div className="container">
+                    <h1>
+                        Nothing has been found.
+                    </h1>
+                </div>
             </div>
-        </main>
         :
         <div className="jumbotron jumbotron-fluid">
             <div className="container">
