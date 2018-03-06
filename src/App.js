@@ -2,6 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Waypoint from 'react-waypoint'
 
+import { Notifs } from 'redux-notifications'
+import 'redux-notifications/lib/styles.css'
+
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css'
 
@@ -245,6 +248,7 @@ let TopicForm = ({hideTopicForm, submitTopicForm, topic, query}) => {
     let titleInput, descriptionInput, narrativeInput
     return <div className="jumbotron jumbotron-fluid">
         <div className="container">
+            <Notifs />
             <h1 className="display-4">Topic for query "{query}".</h1>
 
             <form

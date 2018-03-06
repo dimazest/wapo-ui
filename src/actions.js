@@ -1,5 +1,6 @@
 import {push} from 'redux-first-routing'
 import decodeUriComponent from 'decode-uri-component'
+import {actions as notifActions} from 'redux-notifications'
 
 import qs from 'qs'
 
@@ -191,9 +192,20 @@ export const saveTopic = (title, description, narrative) => (
                 body: JSON.stringify({
                     user_name, query, title, description, narrative,
                 })})
-            .then(r => r.json())
-            .then(d => dispatch({
-                type: 'TOPIC_SAVED'
-            }))
+            .then(response => {
+                if(response.ok) { return response.json()}
+
+                throw new Error('Could not save the topic.')
+            })
+            .then(d => dispatch(notifActions.notifSend({
+                message: 'Topic saved.',
+                kind: 'info',
+                dismissAfter: 2000,
+            })))
+            .catch(error => dispatch(notifActions.notifSend({
+                message: error.message,
+                kind: 'warning',
+                dismissAfter: 2000,
+            })))
     }
 )

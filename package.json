@@ -20,6 +20,7 @@
     "redux": "^3.7.2",
     "redux-first-routing": "^0.3.0",
     "redux-logger": "^3.0.6",
+    "redux-notifications": "^4.0.1",
     "redux-shortcuts": "0.0.3",
     "redux-storage": "^4.1.2",
     "redux-storage-engine-localstorage": "^1.1.4",

@@ -6,6 +6,7 @@ import logger from 'redux-logger'
 import {createBrowserHistory, routerReducer, routerMiddleware, startListener} from 'redux-first-routing'
 import thunkMiddleware from 'redux-thunk'
 import {bindShortcuts, mousetrap, Mousetrap} from 'redux-shortcuts'
+import { reducer as notifReducer } from 'redux-notifications'
 
 import * as storage from 'redux-storage'
 import createEngine from 'redux-storage-engine-localstorage'
@@ -27,7 +28,8 @@ const history = createBrowserHistory()
 
 const rootReducer = storage.reducer(combineReducers({
     ...reducers,
-    router: routerReducer
+    router: routerReducer,
+    notifs: notifReducer,
 }))
 
 const storageEngine = createEngine('trec-news-wapo');
