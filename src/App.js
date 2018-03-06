@@ -329,7 +329,7 @@ let App = ({
             <QueryForm />
         </nav>,
         currentQuery ?
-            (hits.length || 0) > 0 ?
+            (hits || []).length > 0 ?
             <main role="main" className="containerFluid mx-5" style={{position: 'relative'}}>
                 <div className="row">
                     <div className="col-6" style={{overflowX: 'hidden', overflowY: 'auto', position: 'fixed', top: '4.5rem', bottom: '0', left: 0}}>
