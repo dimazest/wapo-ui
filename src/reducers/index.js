@@ -82,10 +82,10 @@ const relevance = (state={}, action) => {
         const judgments = {}
 
         for (let p of action.payload){
-            judgments[p.query] = {
+            judgments[p.query] = [
                 ...judgments[p.query],
-                [p.document_id]: p.judgment
-            }
+                p.judgment
+            ]
         }
 
         return judgments
@@ -114,5 +114,24 @@ const topic = (state={}, action) => {
     }
 
 }
-export default {frontend, hits, relevance, topic}
 
+const topics = (state={}, action) => {
+    switch (action.type) {
+        case actions.TOPICS_RECEIVED:
+            return {
+                ...state,
+                topics: action.topics
+        }
+        case actions.RELEVANCE_RECEIVED:
+
+        return {
+            ...state,
+            ...action,
+        }
+        default:
+            return state
+    }
+
+}
+
+export default {frontend, hits, relevance, topic, topics}

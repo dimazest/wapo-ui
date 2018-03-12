@@ -48,14 +48,15 @@ const initialState = {
     },
     relevance: {},
     topic: {},
+    topics: {},
 }
 const store = createStoreWithMiddleware(
     rootReducer,
     initialState,
     applyMiddleware(
-        logger,
-        routerMiddleware(history),
         thunkMiddleware,
+        routerMiddleware(history),
+        logger,
     )
 )
 
@@ -79,6 +80,14 @@ if (currentHash) {
     store.dispatch(actions.hashUpdated(currentHash))
     store.dispatch(actions.submitQuery())
 }
+
+fetch(`${window.api_root}/topic`)
+.then(r => r.json())
+.then(d => store.dispatch(actions.topicsReceived(d)))
+
+fetch(`${window.api_root}/relevance`)
+.then(r => r.json())
+.then(d => store.dispatch(actions.relevanceReceived(d)))
 
 bindShortcuts(
     [['n', 'j', 'down'], actions.selectNext],

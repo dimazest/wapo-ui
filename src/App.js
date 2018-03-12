@@ -311,10 +311,38 @@ TopicForm = connect(
 
 let App = ({
     active_hit, hits, user, onSubmitCredentials, currentQuery, queryInputFocused,
-    showTopicForm,
+    showTopicForm, topics
 }) => {
     hits = hits.body ? hits.body.hits.hits : null
     const wapo_url = (hits && active_hit >= 0 && hits[active_hit]) ? hits[active_hit]._source.url : null
+
+    if (currentQuery === '__topics__') {
+        return <main role="main" className="containerFluid mx-5">
+            <div className="col-6">
+                <ul>
+                    {(topics.topics || []).map(t => (
+                        <li key={`${t.user_name}-${t.query}`}>
+                            <h4>{t.title}</h4>
+                            <p>{t.description}</p>
+                            <p>{t.narrative}</p>
+                            <ol>
+                                {Object.values((((topics.relevance || {})[t.user_name] || {})[t.query] || {})).map(d =>
+                                    d.judgment > 0 ?
+                                    <li key={d.document_id}>
+                                        <a href={topics.docInfo[d.document_id].url}>
+                                            {topics.docInfo[d.document_id].title}
+                                        </a>
+                                    </li>
+                                    :
+                                    null
+                                )}
+                            </ol>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </main>
+    }
 
     if (!user) {return <UserForm />}
 
@@ -368,6 +396,7 @@ App = connect(
         currentQuery: state.frontend.queryText.current,
         queryInputFocused: state.frontend.queryInputFocused,
         showTopicForm: state.frontend.showTopicForm,
+        topics: state.topics,
     }),
 )(App)
 export default App;

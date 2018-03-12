@@ -209,3 +209,47 @@ export const saveTopic = (title, description, narrative) => (
             })))
     }
 )
+
+export const TOPICS_RECEIVED = 'TOPICS_RECEIVED'
+export const topicsReceived = topics => ({
+    type: TOPICS_RECEIVED,
+    topics,
+})
+
+export const RELEVANCE_RECEIVED = 'RELEVANCE_RECEIVED'
+export const relevanceReceived = data => {
+    return dispatch => {
+        let relevance = {}
+        let doc_ids = []
+
+        for (let i in data){
+            let {user_name, query, document_id, judgment} = data[i]
+
+            relevance[user_name] = {
+                ...relevance[user_name],
+                [query]: {
+                    ...(relevance[user_name] || {})[query],
+                    [document_id]: {document_id, judgment}
+                }
+            }
+
+            doc_ids.push(document_id)
+        }
+
+        return window.client.mget({
+            index: 'wapo',
+            body: {ids: doc_ids}
+        }).then(r => {
+            let docInfo = {}
+            for (let i in r.docs) {
+                let {_id, _source} = r.docs[i]
+                docInfo[_id] = _source
+            }
+            return dispatch({
+                type: RELEVANCE_RECEIVED,
+                relevance,
+                docInfo,
+            })
+        })
+    }
+}
