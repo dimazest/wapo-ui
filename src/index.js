@@ -34,7 +34,6 @@ const rootReducer = storage.reducer(combineReducers({
 
 const storageEngine = createEngine('trec-news-wapo');
 const storageMiddleware = storage.createMiddleware(storageEngine)
-const createStoreWithMiddleware = applyMiddleware(storageMiddleware)(createStore)
 
 const initialState = {
     frontend: {
@@ -50,11 +49,12 @@ const initialState = {
     topic: {},
     topics: {},
 }
-const store = createStoreWithMiddleware(
+const store = createStore(
     rootReducer,
     initialState,
     applyMiddleware(
         thunkMiddleware,
+        storageMiddleware,
         routerMiddleware(history),
         logger,
     )
@@ -107,7 +107,7 @@ bindShortcuts(
             const hit = hits[activeHit]
             if (hit !== undefined) {
                 const j = (state.relevance[query] || {})[hit._id]
-                return actions.relevanceClick(user, query, hit._id, !j)
+                return actions.relevanceClick(user, query, hit._id, j > 0 ? 0 : 1)
             }
         },
         true,

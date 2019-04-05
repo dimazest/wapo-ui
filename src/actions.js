@@ -119,7 +119,7 @@ export const relevanceClick = (user, query, docID, judgment=true) => (
                 user_name: user,
                 query: query,
                 document_id: docID,
-                judgment: judgment ? 1 : 0,
+                judgment: judgment,
             })})
         .then(r => r.json())
         .then(d => dispatch({

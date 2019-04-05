@@ -129,7 +129,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                                  />
                                              </h4>
                                          </div>
-                                         <div className="col-1">
+                                         <div className="col-1 btn-group">
                                              <button
                                                  type="button"
                                                  className={"btn btn-small" + (
@@ -137,9 +137,16 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                                          ? " btn-success"
                                                          : (isActiveHit ? " btn-secondary" : " btn-outline-secondary")
                                                  )}
-                                                 onClick={() => onRelevanceClick(user, queryText, hit._id, !isRelevant)}
+                                                 onClick={() => onRelevanceClick(user, queryText, hit._id, isRelevant ? 0 : 1)}
                                              >
                                                  {isRelevant ? relevantCounter : <span className="oi oi-thumb-up" />}
+                                             </button>
+                                             <button
+                                                 type="button"
+                                                 class={"btn btn-small" + (isRelevant > 1  ? " btn-success" : (isActiveHit ? " btn-secondary" : " btn-outline-secondary"))}
+                                                 onClick={() => onRelevanceClick(user, queryText, hit._id, isRelevant ? 0 : 2)}
+                                                 >
+                                                     <span className="oi oi-star" />
                                              </button>
                                          </div>
                                      </div>
