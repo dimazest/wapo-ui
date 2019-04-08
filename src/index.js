@@ -10,6 +10,7 @@ import { reducer as notifReducer } from 'redux-notifications'
 
 import * as storage from 'redux-storage'
 import createEngine from 'redux-storage-engine-localstorage'
+import filter from 'redux-storage-decorator-filter'
 
 import elasticsearch from 'elasticsearch'
 
@@ -32,7 +33,10 @@ const rootReducer = storage.reducer(combineReducers({
     notifs: notifReducer,
 }))
 
-const storageEngine = createEngine('trec-news-wapo');
+const storageEngine = filter(
+    createEngine('trec-news-wapo'),
+    ['frontend'],
+);
 const storageMiddleware = storage.createMiddleware(storageEngine)
 
 const initialState = {
@@ -87,7 +91,7 @@ fetch(`${window.api_root}/topic`)
 
 fetch(`${window.api_root}/relevance`)
 .then(r => r.json())
-.then(d => store.dispatch(actions.relevanceReceived(d)))
+.then(d => store.dispatch(actions.loadJudgments(d)))
 
 bindShortcuts(
     [['n', 'j', 'down'], actions.selectNext],

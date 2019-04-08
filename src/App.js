@@ -13,10 +13,14 @@ import dateFormat from 'dateformat'
 
 import * as actions from './actions'
 
+const getStarredDocID = state => (
+    Object.entries(state.relevance[state.frontend.queryText.current] || {}).reduce(((a, [docID, j]) => j > 1 ? docID : a), null)
+)
+
 
 let QueryForm = ({
     queryText, onChangeQuery, onSubmitQuery, onInputFocus, onInputBlur,
-    queryInputFocused, user, setCredentials, onToggleTopicForm,
+    queryInputFocused, user, setCredentials, onToggleTopicForm, starredDocID,
 }) => ([
     <div className="mx-auto">
         <form className="form-inline mt-2 mt-md-0"
@@ -56,9 +60,14 @@ let QueryForm = ({
                         Search
                     </button>
                     <button
-                        className={"btn " + (queryInputFocused ? " btn-info" : " btn-secondary")}
+                         className={"btn " + (
+                             queryInputFocused
+                                 ? (starredDocID ? " btn-info" : " btn-outline-info")
+                                 : (starredDocID ? " btn-secondary" : " btn-outline-secondary")
+                         )}
                         type="button"
                         onClick={onToggleTopicForm}
+                        disabled={!starredDocID}
                     >
                         Manage the topic
                     </button>
@@ -81,6 +90,7 @@ QueryForm = connect(
         queryText: state.frontend.queryText.new,
         queryInputFocused: state.frontend.queryInputFocused,
         user: state.frontend.user,
+        starredDocID: getStarredDocID(state),
     }),
     dispatch => ({
         onSubmitQuery: () => dispatch(actions.submitQuery(true)),
@@ -118,7 +128,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                  >
                                  <div className="container-fluid">
                                      <div className="row align-items-center">
-                                         <div className="col-11 mr-auto pl-0">
+                                         <div className="col-10 mr-auto pl-0">
                                              <h4>
                                                  <span className={"badge mr-2" + (isActiveHit ? " badge-primary" : " badge-secondary")}>{i+1}</span>
                                                  <a
@@ -129,7 +139,7 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                                  />
                                              </h4>
                                          </div>
-                                         <div className="col-1 btn-group">
+                                         <div className="col-2 btn-group">
                                              <button
                                                  type="button"
                                                  className={"btn btn-small" + (
@@ -143,8 +153,8 @@ let SearchResults = ({queryText, hits, onWaypointEnter, onLinkClick, active_hit,
                                              </button>
                                              <button
                                                  type="button"
-                                                 class={"btn btn-small" + (isRelevant > 1  ? " btn-success" : (isActiveHit ? " btn-secondary" : " btn-outline-secondary"))}
-                                                 onClick={() => onRelevanceClick(user, queryText, hit._id, isRelevant ? 0 : 2)}
+                                                 className={"btn btn-small" + (isRelevant > 1  ? " btn-success" :" btn-outline-secondary")}
+                                                 onClick={() => onRelevanceClick(user, queryText, hit._id, isRelevant > 1 ? 1 : 2)}
                                                  >
                                                      <span className="oi oi-star" />
                                              </button>
@@ -308,7 +318,10 @@ let TopicForm = ({hideTopicForm, submitTopicForm, topic, query}) => {
     </div>
 }
 TopicForm = connect(
-    state => ({topic: state.topic, query: state.frontend.queryText.current}),
+    state => ({
+        topic: state.topic,
+        query: state.frontend.queryText.current,
+    }),
     dispatch => ({
         hideTopicForm: () => dispatch(actions.toggleTopicForm(false)),
         submitTopicForm: (title, description, narrative) => dispatch(actions.saveTopic(title, description, narrative)),

@@ -106,29 +106,56 @@ export const queryInputFocusChange = (focused=true) => ({
 })
 
 export const RELEVANCE_CLICK = 'RELEVANCE_CLICK'
-export const relevanceClick = (user, query, docID, judgment=true) => (
-    dispatch => fetch(
-        `${window.api_root}/relevance`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Accept': 'application/vnd.pgrst.object+json',
-                'Prefer': 'resolution=merge-duplicates,return=representation',
-            },
-            body: JSON.stringify({
-                user_name: user,
-                query: query,
-                document_id: docID,
-                judgment: judgment,
-            })})
-        .then(r => r.json())
-        .then(d => dispatch({
-            type: RELEVANCE_CLICK,
-            user: d.user_name,
-            query: d.query,
-            docID: d.document_id,
-            judgment: d.judgment,
-        })))
+export const relevanceClick = (user, query, docID, judgment=1, reset_source_judgment=true) => (
+    dispatch => {
+        if (judgment > 1 && reset_source_judgment) {
+            let url = new URL('/relevance', window.api_root)
+            let params = {
+                user_name: `eq.${user}`,
+                query: `eq.${query}`,
+                judgment: 'gt.1',
+            }
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+
+            return fetch(
+                url, {
+                    method: 'PATCH',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Prefer': 'return=representation',
+                    },
+                    body: JSON.stringify({
+                        judgment: 1,
+                    })})
+                .then(r => r.json())
+                .then(d => dispatch(loadJudgments(d)))
+                .then(() => dispatch(relevanceClick(user, query, docID, judgment, false)))
+        }
+        else {
+            return fetch(
+                `${window.api_root}/relevance`, {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Accept': 'application/vnd.pgrst.object+json',
+                        'Prefer': 'resolution=merge-duplicates,return=representation',
+                    },
+                    body: JSON.stringify({
+                        user_name: user,
+                        query: query,
+                        document_id: docID,
+                        judgment: judgment,
+                    })})
+                .then(r => r.json())
+                .then(d => dispatch({
+                    type: RELEVANCE_CLICK,
+                    user: d.user_name,
+                    query: d.query,
+                    docID: d.document_id,
+                    judgment: d.judgment,
+                }))
+        }
+    })
 
 
 export const LOAD_JUDGMENTS = 'LOAD_JUDGMENTS'

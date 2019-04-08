@@ -79,13 +79,13 @@ const hits = (state={}, action) => {
 const relevance = (state={}, action) => {
     switch (action.type) {
     case actions.LOAD_JUDGMENTS: {
-        const judgments = {}
+        const judgments = {...state}
 
         for (let p of action.payload){
-            judgments[p.query] = [
-                ...judgments[p.query],
-                p.judgment
-            ]
+            judgments[p.query] = {
+                ...(judgments[p.query] || {}),
+                [p.document_id]: p.judgment,
+            }
         }
 
         return judgments
